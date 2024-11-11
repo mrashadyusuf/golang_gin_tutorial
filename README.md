@@ -10,3 +10,8 @@ go run main.go
 - go to setup.go and adjust the database
 - adjust database name, and run the project, for the database column it will automaticallayh migrate from ORM
 - to see exampel see postman collectionS
+
+# How to initialize project name, for adjust go.mod to later used for import module,:
+go mod init go-restapi-gin
+# Import needed dependencies
+Go mod tidy

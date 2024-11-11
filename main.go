@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/tentangkode/go-restapi-gin/controllers/productcontroller"
-	"github.com/tentangkode/go-restapi-gin/models"
+	"go-restapi-gin/controllers/productcontroller"
+	"go-restapi-gin/models"
 
 	"github.com/gin-gonic/gin"
 )

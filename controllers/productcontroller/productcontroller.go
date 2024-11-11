@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/tentangkode/go-restapi-gin/models"
+	"go-restapi-gin/models"
+
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
