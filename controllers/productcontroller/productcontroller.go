@@ -2,6 +2,7 @@ package productcontroller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"go-restapi-gin/models"
@@ -37,6 +38,33 @@ func Show(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"product": product})
 }
+
+func Search(c *gin.Context) {
+	var product models.Product
+
+	// Get the key and value from query parameters
+	id := c.Query("id")
+	value := c.Query("value")
+
+    // fmt.Println("Type:", reflect.TypeOf(value))
+	// fmt.Println("Type:", reflect.TypeOf(value))
+
+	fmt.Println("key",id,value)
+	if err := models.DB.Where("nama_product = ? OR id = ?", value, id).First(&product).Error; err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Data tidak ditemukan"})
+			return
+		default:
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"product": product})
+	
+}
+
 
 func Create(c *gin.Context) {
 
@@ -83,10 +111,44 @@ func Delete(c *gin.Context) {
 	}
 
 	id, _ := input.Id.Int64()
+	fmt.Println(id)
 	if models.DB.Delete(&product, id).RowsAffected == 0 {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Tidak dapat menghapus product"})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Data berhasil dihapus"})
+}
+
+func Test(c *gin.Context) {
+	
+	var input struct {
+		Id        json.Number `json:"id"`
+		Deskripsi string      `json:"deskripsi"`
+	}
+
+	// Binding data JSON ke struct
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	id, _ := input.Id.Int64()
+
+	fmt.Println("Hello")
+
+	var angka int64 = 12
+	fmt.Println("id:",angka)
+	fmt.Println(id)
+
+	fmt.Println(input)
+	fmt.Println(input.Deskripsi)
+	fmt.Println(input.Deskripsi)
+
+
+	var message string = "test aja berhasil" + "yo"+  input.Id.String()
+	fmt.Println("Message:",message)
+
+
+	c.JSON(http.StatusOK, gin.H{"message": message})
+
 }
